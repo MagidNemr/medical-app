@@ -6,44 +6,49 @@
     <title>المكتبة الفنية لبدائل الأدوية</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #00897b; --primary-dark: #004d40; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --muted: #64748b; }
+        :root {
+            --primary: #00897b;
+            --primary-dark: #004d40;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+        }
         body { font-family: 'Cairo', sans-serif; background-color: var(--bg); margin: 0; padding: 0; color: var(--text); }
-        .app-header { background: linear-gradient(135deg, var(--primary-dark), var(--primary); color: white; padding: 40px 20px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .app-header h1 { margin: 0; font-size: 26px; font-weight: 700; }
-        .app-header p { margin: 5px 0 0 0; opacity: 0.9; font-size: 13px; }
-        .main-content { max-width: 600px; margin: -30px auto 40px auto; padding: 0 20px; }
-        .search-container { background: var(--card); padding: 12px 20px; border-radius: 50px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: flex; align-items: center; border: 2px solid var(--primary); }
-        .search-input { flex: 1; border: none; font-size: 16px; font-family: 'Cairo'; outline: none; background: transparent; }
-        .card { background: var(--card); border-radius: 16px; padding: 25px; margin-top: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; display: none; text-align: right; }
-        .med-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 15px; }
-        .med-name { font-size: 22px; font-weight: 700; color: var(--primary-dark); }
-        .price-tag { background: #e0f2f1; color: var(--primary-dark); font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 15px; }
-        .info-row { margin-bottom: 12px; font-size: 16px; }
+        .app-header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; padding: 35px 20px; text-align: center; border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .app-header h1 { margin: 0; font-size: 24px; font-weight: 700; }
+        .app-header p { margin: 6px 0 0 0; opacity: 0.9; font-size: 13px; }
+        .main-content { max-width: 500px; margin: -25px auto 40px auto; padding: 0 16px; }
+        .search-container { background: var(--card); padding: 6px 12px; border-radius: 30px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); display: flex; align-items: center; border: 2px solid var(--primary); }
+        .search-input { flex: 1; border: none; padding: 10px 15px; font-size: 16px; font-family: 'Cairo'; outline: none; background: transparent; text-align: right; }
+        .card { background: var(--card); border-radius: 16px; padding: 20px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; display: none; text-align: right; }
+        .med-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 12px; }
+        .med-name { font-size: 20px; font-weight: 700; color: var(--primary-dark); }
+        .price-tag { background: #e0f2f1; color: var(--primary-dark); font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 14px; }
+        .info-row { margin-bottom: 10px; font-size: 15px; }
         .info-label { font-weight: 600; color: var(--muted); }
         .alt-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-top: 15px; }
-        .alt-title { font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+        .alt-title { font-weight: 700; color: #0f172a; margin-bottom: 8px; font-size: 15px; }
         .alt-list { margin: 0; padding-right: 20px; color: #334155; font-size: 15px; }
-        .alt-list li { margin-bottom: 8px; font-weight: bold; color: var(--primary); }
-        .ad-banner { background: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 20px; text-align: center; font-size: 14px; color: var(--muted); margin-bottom: 25px; min-height: 90px; }
-        .safety-note { font-size: 11px; color: #ef4444; text-align: center; margin-top: 35px; font-weight: 600; line-height: 1.6; }
+        .alt-list li { margin-bottom: 6px; color: var(--primary-dark); font-weight: 600; }
+        .ad-banner { background: #fff; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 15px; text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+        .safety-note { font-size: 11px; color: #ef4444; text-align: center; margin-top: 30px; font-weight: 600; line-height: 1.5; }
     </style>
 </head>
 <body>
 
 <div class="app-header">
     <h1>المكتبة الفنية لبدائل الأدوية 💊</h1>
-    <p>ابحث عن أي دواء لمعرفة بدائله ومثائله المحدثة لحظياً بالسوق</p>
+    <p>ابحث عن الدواء لمعرفة بدائله ومثائله المحدثة لحظياً بالسوق</p>
 </div>
 
 <div class="main-content">
-    <!-- مساحة الإعلانات الجاهزة لوضع شفرات أرباحك -->
     <div class="ad-banner">
-        <!-- ضع هنا كود إعلانات Adsterra الخاص بك أو كود بنر AdMob التسييلي المالي لتبدأ الأرباح بالظهور للمستخدمين -->
-        <span style="font-weight: bold; color: #00897b;">مساحة إعلانات المطور النشطة 💵</span>
+        <span style="font-weight: bold; color: var(--primary);">مساحة إعلانات المطور النشطة 💵</span>
     </div>
 
     <div class="search-container">
-        <input type="text" id="searchInput" class="search-input" placeholder="اكتب اسم الدواء هنا (مثل: كتالفام، بانادول، كونجستال)..." oninput="processSearch()">
+        <input type="text" id="searchInput" class="search-input" placeholder="اكتب اسم الدواء هنا (مثال: كتالفام، بانادول)..." oninput="processSearch()">
     </div>
 
     <div id="resultCard" class="card">
@@ -60,17 +65,15 @@
         </div>
     </div>
 
-    <div class="safety-note">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مصمم لأغراض استرشادية فقط لتسهيل البحث. يجب دائماً مراجعة الطبيب المعالج أو الصيدلي المختص قبل تغيير نوع الدواء أو تعديل جرعاته.</div>
+    <div class="safety-note">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي فقط. يجب مراجعة الطبيب أو الصيدلي المختص قبل تغيير نوع الدواء أو تعديل الجرعات.</div>
 </div>
 
 <script>
-    // قاعدة بيانات حية ومفتوحة تم ربطها بالتطبيق للتشغيل اللحظي الفوري
     const liveDatabase = [
         { name: "كتالفام", active: "Diclofenac Potassium (50 مجم)", price: 75, alts: ["أوفلام (Oflam)", "فاست فلام (Fastflam)", "أنتيفلام (Antiflam)"] },
         { name: "بانادول أدفانس", active: "Paracetamol (500 مجم)", price: 40, alts: ["بارامول (Paramol)", "أدول (Adol)", "سيتال (Cetal)"] },
         { name: "كونجستال", active: "Paracetamol + Chlorpheniramine", price: 35, alts: ["بارامول فلو", "سيتال cold", "باور كابس"] },
-        { name: "بروفين 400", active: "Ibuprofen (400mg)", price: 30, alts: ["إيبوبروفين أمون", "باي بروفينيد", "فلاموتال"] },
-        { name: "أوجمنتين 1 جم", active: "Amoxicillin + Clavulanic acid", price: 110, alts: ["كلافيموكس", "ميجاموكس", "هاي بيوتك"] }
+        { name: "بروفين 400", active: "Ibuprofen (400mg)", price: 30, alts: ["إيبوبروفين أمون", "باي بروفينيد", "فلاموتال"] }
     ];
 
     function processSearch() {
@@ -79,7 +82,6 @@
         
         if(!query) { card.style.display = 'none'; return; }
 
-        // آلية مطابقة محترفة تبحث في الاسم أو المادة الفعالة
         const result = liveDatabase.find(item => 
             item.name.toLowerCase().includes(query) || 
             item.active.toLowerCase().includes(query)
@@ -98,7 +100,7 @@
             document.getElementById('medName').innerText = "دواء غير مسجل";
             document.getElementById('medPrice').innerText = "--";
             document.getElementById('medActive').innerText = "جاري مراجعته";
-            document.getElementById('medAlts').innerHTML = "<li>الدواء غير مضاف حالياً، سيتم تحديثه تلقائياً بواسطة الإدارة في القريب العاجل.</li>";
+            document.getElementById('medAlts').innerHTML = "<li>الدواء غير مضاف حالياً، سيتم تحديثه تلقائياً بواسطة الإدارة.</li>";
             card.style.display = 'block';
         }
     }

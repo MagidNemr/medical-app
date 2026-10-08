@@ -35,27 +35,20 @@
         .alt-header-title { font-weight: 700; color: #0f172a; margin-bottom: 12px; font-size: 14px; }
         .alt-bullet-list { margin: 0; padding-right: 20px; color: #334155; font-size: 14px; }
         .alt-bullet-list li { margin-bottom: 8px; color: #004d40; font-weight: 600; }
-        .ad-space-lux { background: var(--surface); border: 2px dashed #cbd5e1; border-radius: 16px; padding: 15px; text-align: center; font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
         .safety-disclaimer-div { font-size: 11px; color: #ef4444; text-align: center; margin-top: 35px; font-weight: 600; line-height: 1.6; }
-        .loading-text { font-size: 12px; color: var(--primary); font-weight: 600; text-align: center; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="app-bar">
     <h1>المكتبة الفنية لبدائل الأدوية 💊</h1>
-    <p>البحث الذكي ثنائي اللغة المحدث تلقائياً عبر السحابة</p>
+    <p>البحث الفوري باللغتين مع تفاصيل التركيز والشكل الدوائي كاملة</p>
 </div>
 
 <div class="wrapper">
-    <div class="ad-space-lux">
-        <span style="font-weight: bold; color: var(--primary);">مساحة إعلانات المطور النشطة 💵</span>
-    </div>
-
     <div class="search-box-wrapper">
-        <input type="text" id="searchInput" class="input-field" placeholder="اكتب اسم الدواء بالعربي أو الإنجليزي..." oninput="executeLiveSearch()">
+        <input type="text" id="searchInput" class="input-field" placeholder="اكتب اسم الدواء (مثال: أوميز، كتالفام، Cataflam)..." oninput="executeLiveSearch()">
     </div>
-    <div id="loadingStatus" class="loading-text">جاري الاتصال بقاعدة البيانات الحية...</div>
 
     <div id="resultCard" class="display-card">
         <div class="card-header-div">
@@ -76,53 +69,26 @@
         </div>
     </div>
 
-    <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص.</div>
+    <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى استشارة الطبيب أو الصيدلي.</div>
 </div>
 
 <script>
-    // رابط قراءة البيانات المباشر من جدول جوجل شيت المفتوح
-    const sheetURL = 'https://google.com';
-    
-    let localMedDatabase =;
-
-    // دالة سحب البيانات التلقائية اللحظية عند فتح التطبيق
-    async function loadCloudDatabase() {
-        try {
-            const response = await fetch(sheetURL);
-            const text = await response.text();
-            // معالجة النص البرمجي الراجع من جوجل وتحويله لـ JSON نظيف
-            const data = JSON.parse(text.substr(47).slice(0, -3));
-            const rows = data.table.rows;
-            
-            localMedDatabase = rows.map(row => ({
-                nameAr: row.c[0] ? String(row.c[0].v) : '',
-                nameEn: row.c[1] ? String(row.c[1].v) : '',
-                activeAr: row.c[2] ? String(row.c[2].v) : '',
-                strength: row.c[3] ? String(row.c[3].v) : '',
-                form: row.c[4] ? String(row.c[4].v) : '',
-                price: row.c[5] ? String(row.c[5].v) : '0',
-                alts: row.c[6] ? String(row.c[6].v).split('-') : 
-            }));
-            
-            document.getElementById('loadingStatus').innerText = "✅ متصل بالخادم السحابي - البيانات محدثة";
-            setTimeout(() => document.getElementById('loadingStatus').style.display = 'none', 3000);
-        } catch (error) {
-            document.getElementById('loadingStatus').innerText = "⚠️ فصل الاتصال السحابي - يعمل بالنظام الاحتياطي";
-            // قاعدة بيانات احتياطية مدمجة في حال عدم وجود إنترنت
-            localMedDatabase = [
-                { nameAr: "كتالفام", nameEn: "Cataflam", activeAr: "ديكلوفيناك البوتاسيوم", strength: "50 مجم", form: "أقراص", price: 75, alts: ["أوفلام", "فاست فلام"] }
-            ];
-        }
-    }
-    
-    loadCloudDatabase();
+    // قاعدة البيانات مدمجة هنا بالكامل منعاً لأي مشاكل في الاتصال أو الحظر الأمني
+    const localMedDatabase = [
+        { nameAr: "كتالفام", nameEn: "cataflam", activeAr: "ديكلوفيناك البوتاسيوم", strength: "50 مجم", form: "حبوب / أقراص", price: 75, alts: ["أوفلام (Oflam) - أقراص", "فاست فلام (Fastflam) - أقراص", "أنتيفلام (Antiflam) - أقراص"] },
+        { nameAr: "أوميز", nameEn: "omez", activeAr: "أوميبرازول", strength: "20 مجم", form: "حبوب / كبسولات", price: 50, alts: ["أوميباك (Omepak) - كبسولات", "رايسك (Risek) - كبسولات", "بيبزول (Pepzol) - كبسولات"] },
+        { nameAr: "بانادول أدفانس", nameEn: "panadol advance", activeAr: "باراسيتامول", strength: "500 مجم", form: "حبوب / أقراص", price: 40, alts: ["بارامول (Paramol) - أقراص", "أدول (Adol) - أقراص", "سيتال (Cetal) - أقراص"] },
+        { nameAr: "بروفين شراب", nameEn: "brufen syrup", activeAr: "إيبوبروفين", strength: "100 مجم / 5 مل", form: "شراب", price: 35, alts: ["إيبوبروفين أمون شراب", "سيتال فورت شراب"] },
+        { nameAr: "سيفوتاكس", nameEn: "cefotax", activeAr: "سيفوتاكسيم", strength: "1 جرام", form: "حقن / فيال", price: 45, alts: ["راميسيفو حقن (Ramicefo)", "سيفوران حقن (Ceforan)"] }
+    ];
 
     function executeLiveSearch() {
         const rawInput = document.getElementById('searchInput').value.trim().toLowerCase();
         const cardElement = document.getElementById('resultCard');
         
-        if(!rawInput || localMedDatabase.length === 0) { cardElement.style.display = 'none'; return; }
+        if(!rawInput) { cardElement.style.display = 'none'; return; }
 
+        // محرك البحث الفوري الذكي المطابق للحروف
         const matchedItem = localMedDatabase.find(item => 
             item.nameAr.toLowerCase().includes(rawInput) || 
             item.nameEn.toLowerCase().includes(rawInput)
@@ -153,4 +119,5 @@
     }
 </script>
 </body>
-</html>
+    </html>
+    

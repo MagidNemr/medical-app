@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المكتبة الفنية لبدائل الأدوية</title>
-    <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root {
             --main-gradient: linear-gradient(135deg, #004d40, #00796b);
@@ -15,13 +14,13 @@
             --primary: #00897b;
             --primary-light: #e0f2f1;
         }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-accent); margin: 0; padding: 0; color: var(--text-dark); }
+        body { font-family: sans-serif; background-color: var(--bg-accent); margin: 0; padding: 0; color: var(--text-dark); }
         .app-bar { background: var(--main-gradient); color: white; padding: 40px 20px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 10px 25px rgba(0, 77, 64, 0.15); }
         .app-bar h1 { margin: 0; font-size: 24px; font-weight: 700; }
         .app-bar p { margin: 6px 0 0 0; opacity: 0.85; font-size: 13px; }
         .wrapper { max-width: 480px; margin: -25px auto 40px auto; padding: 0 16px; box-sizing: border-box; }
         .search-box-wrapper { background: var(--surface); padding: 6px 10px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); display: flex; align-items: center; border: 2px solid #e2e8f0; }
-        .input-field { flex: 1; border: none; padding: 12px 15px; font-size: 16px; font-family: 'Cairo'; outline: none; background: transparent; text-align: right; }
+        .input-field { flex: 1; border: none; padding: 12px 15px; font-size: 16px; outline: none; background: transparent; text-align: right; font-weight: bold; }
         .display-card { background: var(--surface); border-radius: 20px; padding: 25px; margin-top: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0; display: none; text-align: right; }
         .card-header-div { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 18px; }
         .drug-title { font-size: 20px; font-weight: 700; color: #004d40; }
@@ -36,19 +35,21 @@
         .alt-bullet-list { margin: 0; padding-right: 20px; color: #334155; font-size: 14px; }
         .alt-bullet-list li { margin-bottom: 8px; color: #004d40; font-weight: 600; }
         .safety-disclaimer-div { font-size: 11px; color: #ef4444; text-align: center; margin-top: 35px; font-weight: 600; line-height: 1.6; }
+        .status-bar { text-align: center; font-size: 12px; color: var(--primary); font-weight: 600; margin-top: 8px; }
     </style>
 </head>
 <body>
 
 <div class="app-bar">
     <h1>المكتبة الفنية لبدائل الأدوية 💊</h1>
-    <p>البحث الفوري باللغتين مع تفاصيل التركيز والشكل الدوائي كاملة</p>
+    <p>محرك بحث سحابي مفتوح لعرض البدائل والتركيزات والأشكال الدوائية فوراً</p>
 </div>
 
 <div class="wrapper">
     <div class="search-box-wrapper">
-        <input type="text" id="searchInput" class="input-field" placeholder="اكتب اسم الدواء (مثال: أوميز، كتالفام، Cataflam)..." oninput="executeLiveSearch()">
+        <input type="text" id="searchInput" class="input-field" placeholder="اكتب اسم أي دواء تبحث عنه بالعربي أو الإنجليزي..." oninput="triggerCloudSearch()">
     </div>
+    <div id="statusIndicator" class="status-bar">جاري فحص قاعدة البيانات السحابية...</div>
 
     <div id="resultCard" class="display-card">
         <div class="card-header-div">
@@ -64,60 +65,67 @@
         </div>
 
         <div class="alternatives-container">
-            <div class="alt-header-title">🔄 البدائل والمثائل المطابقة والمتوفرة:</div>
+            <div class="alt-header-title">🔄 البدائل والمثائل المتوفرة حالياً:</div>
             <ul class="alt-bullet-list" id="medAlts"></ul>
         </div>
     </div>
 
-    <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى استشارة الطبيب أو الصيدلي.</div>
+    <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص.</div>
 </div>
 
 <script>
-    // قاعدة البيانات مدمجة هنا بالكامل منعاً لأي مشاكل في الاتصال أو الحظر الأمني
-    const localMedDatabase = [
-        { nameAr: "كتالفام", nameEn: "cataflam", activeAr: "ديكلوفيناك البوتاسيوم", strength: "50 مجم", form: "حبوب / أقراص", price: 75, alts: ["أوفلام (Oflam) - أقراص", "فاست فلام (Fastflam) - أقراص", "أنتيفلام (Antiflam) - أقراص"] },
-        { nameAr: "أوميز", nameEn: "omez", activeAr: "أوميبرازول", strength: "20 مجم", form: "حبوب / كبسولات", price: 50, alts: ["أوميباك (Omepak) - كبسولات", "رايسك (Risek) - كبسولات", "بيبزول (Pepzol) - كبسولات"] },
-        { nameAr: "بانادول أدفانس", nameEn: "panadol advance", activeAr: "باراسيتامول", strength: "500 مجم", form: "حبوب / أقراص", price: 40, alts: ["بارامول (Paramol) - أقراص", "أدول (Adol) - أقراص", "سيتال (Cetal) - أقراص"] },
-        { nameAr: "بروفين شراب", nameEn: "brufen syrup", activeAr: "إيبوبروفين", strength: "100 مجم / 5 مل", form: "شراب", price: 35, alts: ["إيبوبروفين أمون شراب", "سيتال فورت شراب"] },
-        { nameAr: "سيفوتاكس", nameEn: "cefotax", activeAr: "سيفوتاكسيم", strength: "1 جرام", form: "حقن / فيال", price: 45, alts: ["راميسيفو حقن (Ramicefo)", "سيفوران حقن (Ceforan)"] }
-    ];
+    // جلب رابط ملف الـ JSON المرفوع معك تلقائياً في نفس المستودع لتفادي مشاكل الحظر
+    const datasetURL = 'medicines.json';
+    let globalMedicinesRegistry = [];
 
-    function executeLiveSearch() {
-        const rawInput = document.getElementById('searchInput').value.trim().toLowerCase();
-        const cardElement = document.getElementById('resultCard');
+    async function initializeCloudRegistry() {
+        try {
+            const res = await fetch(datasetURL);
+            globalMedicinesRegistry = await res.json();
+            document.getElementById('statusIndicator').innerText = "✅ متصل بنجاح - قاعدة البيانات السحابية جاهزة للبحث";
+            setTimeout(() => document.getElementById('statusIndicator').style.display = 'none', 3000);
+        } catch (e) {
+            document.getElementById('statusIndicator').innerText = "❌ فشل الاتصال بالملف السحابي";
+        }
+    }
+
+    initializeCloudRegistry();
+
+    function triggerCloudSearch() {
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        const card = document.getElementById('resultCard');
         
-        if(!rawInput) { cardElement.style.display = 'none'; return; }
+        if(!query || globalMedicinesRegistry.length === 0) { card.style.display = 'none'; return; }
 
-        // محرك البحث الفوري الذكي المطابق للحروف
-        const matchedItem = localMedDatabase.find(item => 
-            item.nameAr.toLowerCase().includes(rawInput) || 
-            item.nameEn.toLowerCase().includes(rawInput)
+        // محرك البحث المتطور لمطابقة الحروف عربي وإنجليزي
+        const match = globalMedicinesRegistry.find(item => 
+            item.nameAr.toLowerCase().includes(query) || 
+            item.nameEn.toLowerCase().includes(query)
         );
 
-        if(matchedItem) {
-            document.getElementById('medName').innerText = matchedItem.nameAr;
-            document.getElementById('medNameEn').innerText = matchedItem.nameEn;
-            document.getElementById('medPrice').innerText = matchedItem.price;
-            document.getElementById('medActive').innerText = matchedItem.activeAr;
-            document.getElementById('medStrength').innerText = matchedItem.strength;
-            document.getElementById('medForm').innerText = matchedItem.form;
+        if(match) {
+            document.getElementById('medName').innerText = match.nameAr;
+            document.getElementById('medNameEn').innerText = match.nameEn;
+            document.getElementById('medPrice').innerText = match.price;
+            document.getElementById('medActive').innerText = match.activeAr;
+            document.getElementById('medStrength').innerText = match.strength;
+            document.getElementById('medForm').innerText = match.form;
             
-            let listItemsHTML = "";
-            matchedItem.alts.forEach(alt => { listItemsHTML += `<li>${alt.trim()}</li>`; });
-            document.getElementById('medAlts').innerHTML = listItemsHTML;
-            cardElement.style.display = 'block';
+            let html = "";
+            match.alts.forEach(alt => { html += `<li>${alt}</li>`; });
+            document.getElementById('medAlts').innerHTML = html;
+            card.style.display = 'block';
         } else {
             document.getElementById('medName').innerText = "دواء غير مسجل";
             document.getElementById('medNameEn').innerText = "Not Found";
             document.getElementById('medPrice').innerText = "--";
-            document.getElementById('medActive').innerText = "جاري مراجعته";
+            document.getElementById('medActive').innerText = "جاري مراجعته وتحديثه";
             document.getElementById('medStrength').innerText = "--";
             document.getElementById('medForm').innerText = "--";
-            document.getElementById('medAlts').innerHTML = "<li>سيتم توفير بدائله تلقائياً قريباً.</li>";
-            cardElement.style.display = 'block';
+            document.getElementById('medAlts').innerHTML = "<li>الدواء غير مضاف حالياً، سيتم توفير بدائله تلقائياً بواسطة الإدارة قريباً.</li>";
+            card.style.display = 'block';
         }
     }
 </script>
 </body>
-    </html>
-    
+</html>

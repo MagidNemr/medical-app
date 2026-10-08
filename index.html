@@ -13,25 +13,30 @@
             --text-dark: #0f172a;
             --text-muted: #64748b;
             --primary: #00897b;
+            --primary-light: #e0f2f1;
         }
         body { font-family: 'Cairo', sans-serif; background-color: var(--bg-accent); margin: 0; padding: 0; color: var(--text-dark); }
-        .app-bar { background: var(--main-gradient); color: white; padding: 45px 20px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 10px 25px rgba(0, 77, 64, 0.15); }
-        .app-bar h1 { margin: 0; font-size: 26px; font-weight: 700; }
-        .app-bar p { margin: 8px 0 0 0; opacity: 0.85; font-size: 13px; }
+        .app-bar { background: var(--main-gradient); color: white; padding: 40px 20px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 10px 25px rgba(0, 77, 64, 0.15); }
+        .app-bar h1 { margin: 0; font-size: 24px; font-weight: 700; }
+        .app-bar p { margin: 6px 0 0 0; opacity: 0.85; font-size: 13px; }
         .wrapper { max-width: 480px; margin: -25px auto 40px auto; padding: 0 16px; box-sizing: border-box; }
-        .ad-space-lux { background: var(--surface); border: 2px dashed #cbd5e1; border-radius: 16px; padding: 15px; text-align: center; font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
         .search-box-wrapper { background: var(--surface); padding: 6px 10px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); display: flex; align-items: center; border: 2px solid #e2e8f0; }
         .input-field { flex: 1; border: none; padding: 12px 15px; font-size: 16px; font-family: 'Cairo'; outline: none; background: transparent; text-align: right; }
-        .display-card { background: var(--surface); border-radius: 20px; padding: 25px; margin-top: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0; display: none; text-align: right; }
+        .display-card { background: var(--surface); border-radius: 20px; padding: 25px; margin-top: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0; display: none; text-align: right; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .card-header-div { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 18px; }
-        .drug-title { font-size: 22px; font-weight: 700; color: #004d40; }
-        .price-badge { background: #e0f2f1; color: #004d40; font-weight: 700; padding: 6px 16px; border-radius: 50px; font-size: 15px; }
-        .row-data { margin-bottom: 12px; font-size: 15px; }
-        .lbl { font-weight: 600; color: var(--text-muted); }
+        .drug-title { font-size: 20px; font-weight: 700; color: #004d40; }
+        .price-badge { background: var(--primary-light); color: #004d40; font-weight: 700; padding: 6px 14px; border-radius: 50px; font-size: 14px; }
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; background: #fafafa; padding: 12px; border-radius: 12px; border: 1px solid #f0f0f0; }
+        .info-row { font-size: 14px; }
+        .lbl { font-weight: 600; color: var(--text-muted); display: block; font-size: 12px; margin-bottom: 2px; }
+        .val { font-weight: 700; color: var(--text-dark); }
+        .badge-form { background: #efebe9; color: #4e342e; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
         .alternatives-container { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-top: 18px; }
-        .alt-header-title { font-weight: 700; color: #0f172a; margin-bottom: 12px; font-size: 15px; }
-        .alt-bullet-list { margin: 0; padding-right: 20px; color: #334155; font-size: 15px; }
+        .alt-header-title { font-weight: 700; color: #0f172a; margin-bottom: 12px; font-size: 14px; }
+        .alt-bullet-list { margin: 0; padding-right: 20px; color: #334155; font-size: 14px; }
         .alt-bullet-list li { margin-bottom: 8px; color: #004d40; font-weight: 600; }
+        .ad-space-lux { background: var(--surface); border: 2px dashed #cbd5e1; border-radius: 16px; padding: 15px; text-align: center; font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
         .safety-disclaimer-div { font-size: 11px; color: #ef4444; text-align: center; margin-top: 35px; font-weight: 600; line-height: 1.6; }
     </style>
 </head>
@@ -39,7 +44,7 @@
 
 <div class="app-bar">
     <h1>المكتبة الفنية لبدائل الأدوية 💊</h1>
-    <p>النظام الذكي الفاخر للبحث عن بدائل ومثائل الأدوية في السوق</p>
+    <p>البحث الذكي ثنائي اللغة بالتركيز والشكل الدوائي (حبوب/شراب/حقن)</p>
 </div>
 
 <div class="wrapper">
@@ -48,7 +53,7 @@
     </div>
 
     <div class="search-box-wrapper">
-        <input type="text" id="searchInput" class="input-field" placeholder="اكتب اسم الدواء هنا (كتالفام، بانادول، أوميز)..." oninput="executeLiveSearch()">
+        <input type="text" id="searchInput" class="input-field" placeholder="اكتب اسم الدواء بالعربي أو الإنجليزي (كتالفام / Cataflam)..." oninput="executeLiveSearch()">
     </div>
 
     <div id="resultCard" class="display-card">
@@ -56,54 +61,53 @@
             <div class="drug-title" id="medName">---</div>
             <div class="price-badge"><span id="medPrice">0</span> ج.م</div>
         </div>
-        <div class="row-data">
-            <span class="lbl">المادة الفعالة:</span> <span id="medActive" style="color: var(--primary); font-weight:700;">---</span>
+        
+        <!-- شبكة تفاصيل الجرعة والشكل الدوائي والمادة الفعالة -->
+        <div class="details-grid">
+            <div class="info-row"><span class="lbl">المادة الفعالة:</span><span class="val" id="medActive">---</span></div>
+            <div class="info-row"><span class="lbl">الاسم بالإنجليزية:</span><span class="val" id="medNameEn" style="font-family:sans-serif;">---</span></div>
+            <div class="info-row"><span class="lbl">التركيز:</span><span class="val" id="medStrength" style="color:var(--primary);">---</span></div>
+            <div class="info-row"><span class="lbl">الشكل الدوائي:</span><span class="badge-form" id="medForm">---</span></div>
         </div>
+
         <div class="alternatives-container">
-            <div class="alt-header-title">🔄 البدائل والمثائل المتوفرة حالياً:</div>
+            <div class="alt-header-title">🔄 البدائل والمثائل المطابقة والمتوفرة:</div>
             <ul class="alt-bullet-list" id="medAlts"></ul>
         </div>
     </div>
 
-    <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يجب مراجعة واستشارة الطبيب أو الصيدلي المختص قبل اتخاذ أي قرار بتبديل الدواء.</div>
+    <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص قبل اتخاذ أي قرار بتبديل الدواء أو تعديل الجرعات.</div>
 </div>
 
 <script>
-    let localMedDatabase = [];
-
-    // جلب الداتا ديناميكياً من ملف JSON المرفوع في مستودعك لضمان عمل المحرك
-    async function loadDatabase() {
-        try {
-            const response = await fetch('medicines.json');
-            localMedDatabase = await response.json();
-            console.log("تم تحميل قاعدة بيانات الأدوية بنجاح.");
-        } catch (error) {
-            console.error("خطأ في قراءة ملف البيانات:", error);
-        }
-    }
-    
-    // تشغيل الجلب التلقائي فور فتح الصفحة
-    loadDatabase();
+    // قاعدة البيانات المتكاملة مدمجة ذاتياً لدعم التشغيل الفوري بدون أخطاء CORS
+    const localMedDatabase = [
+        { nameAr: "كتالفام", nameEn: "Cataflam", activeAr: "ديكلوفيناك البوتاسيوم", strength: "50 مجم", form: "حبوب / أقراص", price: 75, alts: ["أوفلام (Oflam) - 50mg أقراص", "فاست فلام (Fastflam) - 50mg أقراص", "أنتيفلام (Antiflam) - 50mg أقراص"] },
+        { nameAr: "أوميز", nameEn: "Omez", activeAr: "أوميبرازول", strength: "20 مجم", form: "حبوب / كبسولات", price: 50, alts: ["أوميباك (Omepak) - 20mg كبسولات", "رايسك (Risek) - 20mg كبسولات", "بيبزول (Pepzol) - 20mg كبسولات"] },
+        { nameAr: "بانادول أدفانس", nameEn: "Panadol Advance", activeAr: "باراسيتامول", strength: "500 مجم", form: "حبوب / أقراص", price: 40, alts: ["بارامول (Paramol) - 500mg أقراص", "أدول (Adol) - 500mg أقراص", "سيتال (Cetal) - 500mg أقراص"] },
+        { nameAr: "بروفين شراب", nameEn: "Brufen Syrup", activeAr: "إيبوبروفين", strength: "100 مجم / 5 مل", form: "شراب", price: 35, alts: ["إيبوبروفين أمون شراب", "سيتال فورت شراب"] },
+        { nameAr: "سيفوتاكس", nameEn: "Cefotax", activeAr: "سيفوتاكسيم", strength: "1 جرام", form: "حقن / فيال", price: 45, alts: ["راميسيفو حقن (Ramicefo)", "سيفوران حقن (Ceforan)"] }
+    ];
 
     function executeLiveSearch() {
         const rawInput = document.getElementById('searchInput').value.trim().toLowerCase();
         const cardElement = document.getElementById('resultCard');
         
-        if(!rawInput) { 
-            cardElement.style.display = 'none'; 
-            return; 
-        }
+        if(!rawInput) { cardElement.style.display = 'none'; return; }
 
-        // محرك البحث الفوري المتطور
+        // محرك البحث المتطور ثنائي اللغة
         const matchedItem = localMedDatabase.find(item => 
-            item.name.toLowerCase().includes(rawInput) || 
-            item.active.toLowerCase().includes(rawInput)
+            item.nameAr.toLowerCase().includes(rawInput) || 
+            item.nameEn.toLowerCase().includes(rawInput)
         );
 
         if(matchedItem) {
-            document.getElementById('medName').innerText = matchedItem.name;
+            document.getElementById('medName').innerText = matchedItem.nameAr;
+            document.getElementById('medNameEn').innerText = matchedItem.nameEn;
             document.getElementById('medPrice').innerText = matchedItem.price;
-            document.getElementById('medActive').innerText = matchedItem.active;
+            document.getElementById('medActive').innerText = matchedItem.activeAr;
+            document.getElementById('medStrength').innerText = matchedItem.strength;
+            document.getElementById('medForm').innerText = matchedItem.form;
             
             let listItemsHTML = "";
             matchedItem.alts.forEach(alt => { listItemsHTML += `<li>${alt.trim()}</li>`; });
@@ -111,9 +115,12 @@
             cardElement.style.display = 'block';
         } else {
             document.getElementById('medName').innerText = "دواء غير مسجل";
+            document.getElementById('medNameEn').innerText = "Not Found";
             document.getElementById('medPrice').innerText = "--";
-            document.getElementById('medActive').innerText = "جاري مراجعته وتحديثه";
-            document.getElementById('medAlts').innerHTML = "<li>الدواء غير مضاف حالياً، سيتم توفير بدائله تلقائياً بواسطة الإدارة قريباً.</li>";
+            document.getElementById('medActive').innerText = "جاري تحديث البيانات";
+            document.getElementById('medStrength').innerText = "--";
+            document.getElementById('medForm').innerText = "--";
+            document.getElementById('medAlts').innerHTML = "<li>الدواء غير مضاف حالياً، سيتم توفير الحقول والبدائل تلقائياً قريباً.</li>";
             cardElement.style.display = 'block';
         }
     }

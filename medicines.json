@@ -1,7 +1,214 @@
 [
-  { "name": "أوميز", "active": "Omeprazole (20 مجم)", "price": 50, "alts": ["أوميباك (Omepak)", "رايسك (Risek)", "بيبزول (Pepzol)"] },
-  { "name": "كتالفام", "active": "Diclofenac Potassium (50 مجم)", "price": 75, "alts": ["أوفلام (Oflam)", "فاست فلام (Fastflam)", "أنتيفلام (Antiflam)"] },
-  { "name": "بانادول أدفانس", "active": "Paracetamol (500 مجم)", "price": 40, "alts": ["بارامول (Paramol)", "أدول (Adol)", "سيتال (Cetal)"] },
-  { "name": "كونجستال", "active": "Paracetamol + Chlorpheniramine", "price": 35, "alts": ["بارامول فلو", "سيتال cold", "باور كابس"] },
-  { "name": "بروفين 400", "active": "Ibuprofen (400mg)", "price": 30, "alts": ["إيبوبروفين أمون", "باي بروفينيد", "فلاموتال"] }
+  {
+    "nameAr": "كتالفام",
+    "nameEn": "cataflam",
+    "activeAr": "ديكلوفيناك البوتاسيوم",
+    "strength": "50 مجم",
+    "form": "حبوب / أقراص",
+    "price": "75",
+    "alts": [
+      "أوفلام (Oflam) - أقراص",
+      "فاست فلام (Fastflam) - أقراص",
+      "أنتيفلام (Antiflam) - أقراص"
+    ]
+  },
+  {
+    "nameAr": "بانادول أدفانس",
+    "nameEn": "panadol advance",
+    "activeAr": "باراسيتامول",
+    "strength": "500 مجم",
+    "form": "حبوب / أقراص",
+    "price": "40",
+    "alts": [
+      "بارامول (Paramol) - أقراص",
+      "أدول (Adol) - أقراص",
+      "سيتال (Cetal) - أقراص"
+    ]
+  },
+  {
+    "nameAr": "بروفين 400",
+    "nameEn": "brufen 400",
+    "activeAr": "إيبوبروفين",
+    "strength": "400 مجم",
+    "form": "حبوب / أقراص",
+    "price": "42",
+    "alts": [
+      "إيبوبروفين أمون - أقراص",
+      "فلاموتال (Flamotal) - أقراص"
+    ]
+  },
+  {
+    "nameAr": "بروفين شراب",
+    "nameEn": "brufen syrup",
+    "activeAr": "إيبوبروفين",
+    "strength": "100 مجم / 5 مل",
+    "form": "شراب",
+    "price": "35",
+    "alts": [
+      "إيبوبروفين أمون شراب",
+      "سيتال فورت شراب"
+    ]
+  },
+  {
+    "nameAr": "باي الكوفان",
+    "nameEn": "bi-alcofan",
+    "activeAr": "كينوبروفين",
+    "strength": "150 مجم",
+    "form": "حبوب / أقراص",
+    "price": "30",
+    "alts": [
+      "كيتوفان 150",
+      "بروفينيد 150"
+    ]
+  },
+  {
+    "nameAr": "أوميز",
+    "nameEn": "omez",
+    "activeAr": "أوميبرازول",
+    "strength": "20 مجم",
+    "form": "حبوب / كبسولات",
+    "price": "50",
+    "alts": [
+      "أوميباك (Omepak) - كبسولات",
+      "رايسك (Risek) - كبسولات",
+      "بيبزول (Pepzol) - كبسولات"
+    ]
+  },
+  {
+    "nameAr": "بانتولوك",
+    "nameEn": "pantoloc",
+    "activeAr": "بانتوبرازول",
+    "strength": "40 مجم",
+    "form": "حبوب / أقراص",
+    "price": "90",
+    "alts": [
+      "زوركال (Zurcal) - أقراص",
+      "بانتوبي (Pantopi) - أقراص",
+      "كونترولوك (Controloc)"
+    ]
+  },
+  {
+    "nameAr": "انتينال",
+    "nameEn": "antinal",
+    "activeAr": "نيلوفوكسازيد",
+    "strength": "200 مجم",
+    "form": "حبوب / كبسولات",
+    "price": "36",
+    "alts": [
+      "دياسميكت (Diasmect)",
+      "فورامكس (Furamex)"
+    ]
+  },
+  {
+    "nameAr": "انتينال شراب",
+    "nameEn": "antinal syrup",
+    "activeAr": "نيلوفوكسازيد",
+    "strength": "220 مجم / 5 مل",
+    "form": "شراب",
+    "price": "26",
+    "alts": [
+      "ميبافوركس شراب",
+      "دياكس شراب"
+    ]
+  },
+  {
+    "nameAr": "أوجمنتين 1 جم",
+    "nameEn": "augmentin 1g",
+    "activeAr": "أموكسيسيلين + كلافولانيك أسيد",
+    "strength": "1 جرام",
+    "form": "حبوب / أقراص",
+    "price": "110",
+    "alts": [
+      "كلافيموكس 1جم",
+      "ميجاموكس 1جم",
+      "هاي بيوتك 1جم"
+    ]
+  },
+  {
+    "nameAr": "سيفوتاكس",
+    "nameEn": "cefotax",
+    "activeAr": "سيفوتاكسيم",
+    "strength": "1 جرام",
+    "form": "حقن / فيال",
+    "price": "45",
+    "alts": [
+      "راميسيفو حقن (Ramicefo)",
+      "سيفوران حقن (Ceforan)"
+    ]
+  },
+  {
+    "nameAr": "زيزروسين",
+    "nameEn": "zithrocin",
+    "activeAr": "أزيثروميسين",
+    "strength": "500 مجم",
+    "form": "حبوب / أقراص",
+    "price": "45",
+    "alts": [
+      "زيثرون (Xithrone)",
+      "أزيليد (Azilide)",
+      "زيثرومكس (Zithromax)"
+    ]
+  },
+  {
+    "nameAr": "كلافيموكس شراب",
+    "nameEn": "clavimox syrup",
+    "activeAr": "أموكسيسيلين + كلافولانيك أسيد",
+    "strength": "457 مجم / 5 مل",
+    "form": "شراب",
+    "price": "60",
+    "alts": [
+      "أوجمنتين شراب 457",
+      "ميجاموكس شراب"
+    ]
+  },
+  {
+    "nameAr": "كونجستال",
+    "nameEn": "congestal",
+    "activeAr": "باراسيتامول + كلورفينيرامين",
+    "strength": "مشترك",
+    "form": "حبوب / أقراص",
+    "price": "35",
+    "alts": [
+      "بارامول فلو (Paramol Flu)",
+      "سيتال كولد فلو",
+      "باور كابس (Power Caps)"
+    ]
+  },
+  {
+    "nameAr": "تيلفاست 180",
+    "nameEn": "telfast 180",
+    "activeAr": "فيكسوفينادين",
+    "strength": "180 مجم",
+    "form": "حبوب / أقراص",
+    "price": "85",
+    "alts": [
+      "فيكسون (Fexon)",
+      "أليجرا (Allegra)",
+      "فيكسودين"
+    ]
+  },
+  {
+    "nameAr": "كلاريتين شراب",
+    "nameEn": "claritine syrup",
+    "activeAr": "لوراتادين",
+    "strength": "5 مجم / 5 مل",
+    "form": "شراب",
+    "price": "45",
+    "alts": [
+      "موسيدين شراب (Mousidin)",
+      "لورانو شراب (Lorano)"
+    ]
+  },
+  {
+    "nameAr": "ديبوفيت حقن",
+    "nameEn": "depovit ampoules",
+    "activeAr": "فيتامين ب12",
+    "strength": "1000 ميكروجرام",
+    "form": "حقن / فيال",
+    "price": "45",
+    "alts": [
+      "بيوفيت حقن (Biovit)",
+      "نيوروتون حقن (Neuroton)"
+    ]
+  }
 ]

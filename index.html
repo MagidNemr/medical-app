@@ -22,8 +22,7 @@
         .wrapper { max-width: 480px; margin: -25px auto 40px auto; padding: 0 16px; box-sizing: border-box; }
         .search-box-wrapper { background: var(--surface); padding: 6px 10px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); display: flex; align-items: center; border: 2px solid #e2e8f0; }
         .input-field { flex: 1; border: none; padding: 12px 15px; font-size: 16px; font-family: 'Cairo'; outline: none; background: transparent; text-align: right; }
-        .display-card { background: var(--surface); border-radius: 20px; padding: 25px; margin-top: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0; display: none; text-align: right; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .display-card { background: var(--surface); border-radius: 20px; padding: 25px; margin-top: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0; display: none; text-align: right; }
         .card-header-div { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 18px; }
         .drug-title { font-size: 20px; font-weight: 700; color: #004d40; }
         .price-badge { background: var(--primary-light); color: #004d40; font-weight: 700; padding: 6px 14px; border-radius: 50px; font-size: 14px; }
@@ -38,13 +37,14 @@
         .alt-bullet-list li { margin-bottom: 8px; color: #004d40; font-weight: 600; }
         .ad-space-lux { background: var(--surface); border: 2px dashed #cbd5e1; border-radius: 16px; padding: 15px; text-align: center; font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
         .safety-disclaimer-div { font-size: 11px; color: #ef4444; text-align: center; margin-top: 35px; font-weight: 600; line-height: 1.6; }
+        .loading-text { font-size: 12px; color: var(--primary); font-weight: 600; text-align: center; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="app-bar">
     <h1>المكتبة الفنية لبدائل الأدوية 💊</h1>
-    <p>البحث الذكي ثنائي اللغة بالتركيز والشكل الدوائي (حبوب/شراب/حقن)</p>
+    <p>البحث الذكي ثنائي اللغة المحدث تلقائياً عبر السحابة</p>
 </div>
 
 <div class="wrapper">
@@ -53,8 +53,9 @@
     </div>
 
     <div class="search-box-wrapper">
-        <input type="text" id="searchInput" class="input-field" placeholder="اكتب اسم الدواء بالعربي أو الإنجليزي (كتالفام / Cataflam)..." oninput="executeLiveSearch()">
+        <input type="text" id="searchInput" class="input-field" placeholder="اكتب اسم الدواء بالعربي أو الإنجليزي..." oninput="executeLiveSearch()">
     </div>
+    <div id="loadingStatus" class="loading-text">جاري الاتصال بقاعدة البيانات الحية...</div>
 
     <div id="resultCard" class="display-card">
         <div class="card-header-div">
@@ -62,7 +63,6 @@
             <div class="price-badge"><span id="medPrice">0</span> ج.م</div>
         </div>
         
-        <!-- شبكة تفاصيل الجرعة والشكل الدوائي والمادة الفعالة -->
         <div class="details-grid">
             <div class="info-row"><span class="lbl">المادة الفعالة:</span><span class="val" id="medActive">---</span></div>
             <div class="info-row"><span class="lbl">الاسم بالإنجليزية:</span><span class="val" id="medNameEn" style="font-family:sans-serif;">---</span></div>
@@ -76,26 +76,53 @@
         </div>
     </div>
 
-    <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص قبل اتخاذ أي قرار بتبديل الدواء أو تعديل الجرعات.</div>
+    <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص.</div>
 </div>
 
 <script>
-    // قاعدة البيانات المتكاملة مدمجة ذاتياً لدعم التشغيل الفوري بدون أخطاء CORS
-    const localMedDatabase = [
-        { nameAr: "كتالفام", nameEn: "Cataflam", activeAr: "ديكلوفيناك البوتاسيوم", strength: "50 مجم", form: "حبوب / أقراص", price: 75, alts: ["أوفلام (Oflam) - 50mg أقراص", "فاست فلام (Fastflam) - 50mg أقراص", "أنتيفلام (Antiflam) - 50mg أقراص"] },
-        { nameAr: "أوميز", nameEn: "Omez", activeAr: "أوميبرازول", strength: "20 مجم", form: "حبوب / كبسولات", price: 50, alts: ["أوميباك (Omepak) - 20mg كبسولات", "رايسك (Risek) - 20mg كبسولات", "بيبزول (Pepzol) - 20mg كبسولات"] },
-        { nameAr: "بانادول أدفانس", nameEn: "Panadol Advance", activeAr: "باراسيتامول", strength: "500 مجم", form: "حبوب / أقراص", price: 40, alts: ["بارامول (Paramol) - 500mg أقراص", "أدول (Adol) - 500mg أقراص", "سيتال (Cetal) - 500mg أقراص"] },
-        { nameAr: "بروفين شراب", nameEn: "Brufen Syrup", activeAr: "إيبوبروفين", strength: "100 مجم / 5 مل", form: "شراب", price: 35, alts: ["إيبوبروفين أمون شراب", "سيتال فورت شراب"] },
-        { nameAr: "سيفوتاكس", nameEn: "Cefotax", activeAr: "سيفوتاكسيم", strength: "1 جرام", form: "حقن / فيال", price: 45, alts: ["راميسيفو حقن (Ramicefo)", "سيفوران حقن (Ceforan)"] }
-    ];
+    // رابط قراءة البيانات المباشر من جدول جوجل شيت المفتوح
+    const sheetURL = 'https://google.com';
+    
+    let localMedDatabase =;
+
+    // دالة سحب البيانات التلقائية اللحظية عند فتح التطبيق
+    async function loadCloudDatabase() {
+        try {
+            const response = await fetch(sheetURL);
+            const text = await response.text();
+            // معالجة النص البرمجي الراجع من جوجل وتحويله لـ JSON نظيف
+            const data = JSON.parse(text.substr(47).slice(0, -3));
+            const rows = data.table.rows;
+            
+            localMedDatabase = rows.map(row => ({
+                nameAr: row.c[0] ? String(row.c[0].v) : '',
+                nameEn: row.c[1] ? String(row.c[1].v) : '',
+                activeAr: row.c[2] ? String(row.c[2].v) : '',
+                strength: row.c[3] ? String(row.c[3].v) : '',
+                form: row.c[4] ? String(row.c[4].v) : '',
+                price: row.c[5] ? String(row.c[5].v) : '0',
+                alts: row.c[6] ? String(row.c[6].v).split('-') : 
+            }));
+            
+            document.getElementById('loadingStatus').innerText = "✅ متصل بالخادم السحابي - البيانات محدثة";
+            setTimeout(() => document.getElementById('loadingStatus').style.display = 'none', 3000);
+        } catch (error) {
+            document.getElementById('loadingStatus').innerText = "⚠️ فصل الاتصال السحابي - يعمل بالنظام الاحتياطي";
+            // قاعدة بيانات احتياطية مدمجة في حال عدم وجود إنترنت
+            localMedDatabase = [
+                { nameAr: "كتالفام", nameEn: "Cataflam", activeAr: "ديكلوفيناك البوتاسيوم", strength: "50 مجم", form: "أقراص", price: 75, alts: ["أوفلام", "فاست فلام"] }
+            ];
+        }
+    }
+    
+    loadCloudDatabase();
 
     function executeLiveSearch() {
         const rawInput = document.getElementById('searchInput').value.trim().toLowerCase();
         const cardElement = document.getElementById('resultCard');
         
-        if(!rawInput) { cardElement.style.display = 'none'; return; }
+        if(!rawInput || localMedDatabase.length === 0) { cardElement.style.display = 'none'; return; }
 
-        // محرك البحث المتطور ثنائي اللغة
         const matchedItem = localMedDatabase.find(item => 
             item.nameAr.toLowerCase().includes(rawInput) || 
             item.nameEn.toLowerCase().includes(rawInput)
@@ -117,10 +144,10 @@
             document.getElementById('medName').innerText = "دواء غير مسجل";
             document.getElementById('medNameEn').innerText = "Not Found";
             document.getElementById('medPrice').innerText = "--";
-            document.getElementById('medActive').innerText = "جاري تحديث البيانات";
+            document.getElementById('medActive').innerText = "جاري مراجعته";
             document.getElementById('medStrength').innerText = "--";
             document.getElementById('medForm').innerText = "--";
-            document.getElementById('medAlts').innerHTML = "<li>الدواء غير مضاف حالياً، سيتم توفير الحقول والبدائل تلقائياً قريباً.</li>";
+            document.getElementById('medAlts').innerHTML = "<li>سيتم توفير بدائله تلقائياً قريباً.</li>";
             cardElement.style.display = 'block';
         }
     }

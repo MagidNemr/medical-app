@@ -1,0 +1,7 @@
+[
+  { "name": "أوميز", "active": "Omeprazole (20 مجم)", "price": 50, "alts": ["أوميباك (Omepak)", "رايسك (Risek)", "بيبزول (Pepzol)"] },
+  { "name": "كتالفام", "active": "Diclofenac Potassium (50 مجم)", "price": 75, "alts": ["أوفلام (Oflam)", "فاست فلام (Fastflam)", "أنتيفلام (Antiflam)"] },
+  { "name": "بانادول أدفانس", "active": "Paracetamol (500 مجم)", "price": 40, "alts": ["بارامول (Paramol)", "أدول (Adol)", "سيتال (Cetal)"] },
+  { "name": "كونجستال", "active": "Paracetamol + Chlorpheniramine", "price": 35, "alts": ["بارامول فلو", "سيتال cold", "باور كابس"] },
+  { "name": "بروفين 400", "active": "Ibuprofen (400mg)", "price": 30, "alts": ["إيبوبروفين أمون", "باي بروفينيد", "فلاموتال"] }
+]

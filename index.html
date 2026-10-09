@@ -43,81 +43,72 @@
 </head>
 <body>
 
-<div class="app-bar">
-    <h1>المكتبة الفنية لبدائل الأدوية 💊</h1>
-    <p>محرك البحث الذكي المتعدد لعرض كافّة النتائج والبدائل والتركيزات فوراً</p>
-</div>
-
-<div class="wrapper">
-    <div class="search-box-wrapper">
-        <input type="text" id="searchInput" class="input-field" placeholder="ابحث باسم الدواء أو المادة الفعالة (أوميز، بروفين، شراب)..." oninput="executeLiveSearch()">
+    <div class="app-bar">
+        <h1>المكتبة الفنية لبدائل الأدوية 💊</h1>
+        <p>محرك البحث الذكي المتعدد لعرض النتائج والبدائل والتركيزات فوراً</p>
     </div>
 
-    <div id="resultsContainer" class="results-list"></div>
-    <div id="noResultsCard" class="no-results">عذراً، لم يتم العثور على أدوية مطابقة لبحثك.</div>
+    <div class="wrapper">
+        <div class="search-box-wrapper">
+            <input type="text" id="searchInput" class="input-field" placeholder="ابحث باسم الدواء أو المادة الفعالة (أوميز، بروفين، شراب)..." oninput="executeLiveSearch()">
+        </div>
 
-    <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص.</div>
-</div>
+        <div id="resultsContainer" class="results-list"></div>
+        <div id="noResultsCard" class="no-results">عذراً، لم يتم العثور على أدوية مطابقة لبحثك.</div>
 
-<script>
-    const localMedDatabase = [
-        { nameAr: "كتالفام", nameEn: "cataflam", activeAr: "ديكلوفيناك البوتاسيوم", strength: "50 مجم", form: "حبوب / أقراص", price: "75", alts: ["أوفلام (Oflam)", "فاست فلام (Fastflam)", "أنتيفلام (Antiflam)"] },
-        { nameAr: "بانادول أدفانس", nameEn: "panadol advance", activeAr: "باراسيتامول", strength: "500 مجم", form: "حبوب / أقراص", price: "40", alts: ["بارامول (Paramol)", "أدول (Adol)", "سيتال (Cetal)"] },
-        { nameAr: "بروفين 400", nameEn: "brufen 400", activeAr: "إيبوبروفين", strength: "400 مجم", form: "حبوب / أقراص", price: "42", alts: ["إيبوبروفين أمون", "فلاموتال (Flamotal)"] },
-        { nameAr: "بروفين شراب", nameEn: "brufen syrup", activeAr: "إيبوبروفين", strength: "100 مجم / 5 مل", form: "شراب", price: "35", alts: ["إيبوبروفين أمون شراب", "سيتال فورت شراب"] },
-        { nameAr: "باي الكوفان", nameEn: "bi-alcofan", activeAr: "كينوبروفين", strength: "150 مجم", form: "حبوب / أقراص", price: "30", alts: ["كيتوفان 150", "بروفينيد 150"] },
-        { nameAr: "أوميز", nameEn: "omez", activeAr: "أوميبرازول", strength: "20 مجم", form: "حبوب / كبسولات", price: "50", alts: ["أوميباك (Omepak)", "رايسك (Risek)", "بيبزول (Pepzol)"] },
-        { nameAr: "بانتولوك", nameEn: "pantoloc", activeAr: "بانتوبرازول", strength: "40 مجم", form: "حبوب / أقراص", price: "90", alts: ["زوركال (Zurcal)", "بانتوبي (Pantopi)", "كونترولوك (Controloc)"] },
-        { nameAr: "انتينال", nameEn: "antinal", activeAr: "نيلوفوكسازيد", strength: "200 مجم", form: "حبوب / كبسولات", price: "36", alts: ["دياسميكت (Diasmect)", "فورامكس (Furamex)"] },
-        { nameAr: "انتينال شراب", nameEn: "antinal syrup", activeAr: "نيلوفوكسازيد", strength: "220 مجم / 5 مل", form: "شراب", price: "26", alts: ["ميبافوركس شراب", "دياكس شراب"] },
-        { nameAr: "أوجمنتين 1 جم", nameEn: "augmentin 1g", activeAr: "أموكسيسيلين + كلافولانيك أسيد", strength: "1 جرام", form: "حبوب / أقراص", price: "110", alts: ["كلافيموكس 1جم", "ميجاموكس 1جم", "هاي بيوتك 1جم"] },
-        { nameAr: "سيفوتاكس", nameEn: "cefotax", activeAr: "سيفوتاكسيم", strength: "1 جرام", form: "حقن / فيال", price: "45", alts: ["راميسيفو حقن", "سيفوران حقن"] },
-        { nameAr: "زيزروسين", nameEn: "zithrocin", activeAr: "أزيثروميسين", strength: "500 مجم", form: "حبوب / أقراص", price: "45", alts: ["زيثرون (Xithrone)", "أزيليد", "زيثرومكس"] },
-        { nameAr: "كلافيموكس شراب", nameEn: "clavimox syrup", activeAr: "أموكسيسيلين + كلافولانيك أسيد", strength: "457 مجم / 5 مل", form: "شراب", price: "60", alts: ["أوجمنتين شراب", "ميجاموكس شراب"] },
-        { nameAr: "كونجستال", nameEn: "congestal", activeAr: "باراسيتامول + كلورفينيرامين", strength: "مشترك", form: "حبوب / أقراص", price: "35", alts: ["بارامول فلو", "سيتال كولد فلو", "باور كابس"] },
-        { nameAr: "تيلفاست 180", nameEn: "telfast 180", activeAr: "فيكسوفينادين", strength: "180 مجم", form: "حبوب / أقراص", price: "85", alts: ["فيكسون (Fexon)", "أليجرا (Allegra)"] },
-        { nameAr: "كلاريتين شراب", nameEn: "claritine syrup", activeAr: "لوراتادين", strength: "5 مجم / 5 مل", form: "شراب", price: "45", alts: ["موسيدين شراب", "لورانو شراب"] },
-        { nameAr: "ديبوفيت حقن", nameEn: "depovit ampoules", activeAr: "فيتامين ب12", strength: "1000 ميكروجرام", form: "حقن / فيال", price: "45", alts: ["بيوفيت حقن", "نيوروتون حقن"] }
-    ];
+        <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص.</div>
+    </div>
 
-    function executeLiveSearch() {
-        const rawInput = document.getElementById('searchInput').value.trim().toLowerCase();
-        const container = document.getElementById('resultsContainer');
-        const noResults = document.getElementById('noResultsCard');
-        
-        container.innerHTML = "";
-        noResults.style.display = 'none';
+    <!-- استدعاء ملف البيانات الخارجي وربطه هنا بأمان لمنع أي تهنيج -->
+    <script src="data.js"></script>
+    <script>
+        function executeLiveSearch() {
+            const rawInput = document.getElementById('searchInput').value.trim().toLowerCase();
+            const container = document.getElementById('resultsContainer');
+            const noResults = document.getElementById('noResultsCard');
+            
+            container.innerHTML = "";
+            noResults.style.display = 'none';
 
-        if(!rawInput) return;
+            if(!rawInput) return;
 
-        const matchedItems = localMedDatabase.filter(item => 
-            item.nameAr.toLowerCase().includes(rawInput) || 
-            item.nameEn.toLowerCase().includes(rawInput) ||
-            item.activeAr.toLowerCase().includes(rawInput) ||
-            item.form.toLowerCase().includes(rawInput)
-        );
+            // محرك التصفية للبحث المتعدد مثل جوجل
+            const matchedItems = localMedDatabase.filter(item => 
+                item.nameAr.toLowerCase().includes(rawInput) || 
+                item.nameEn.toLowerCase().includes(rawInput) ||
+                item.activeAr.toLowerCase().includes(rawInput) ||
+                item.form.toLowerCase().includes(rawInput)
+            );
 
-        if(matchedItems.length > 0) {
-            matchedItems.forEach(item => {
-                let altsHTML = "";
-                item.alts.forEach(alt => { altsHTML += `<li>${alt.trim()}</li>`; });
+            if(matchedItems.length > 0) {
+                matchedItems.forEach(item => {
+                    let altsHTML = "";
+                    item.alts.forEach(alt => { altsHTML += `<li>${alt.trim()}</li>`; });
 
-                const cardHTML = `
-                    <div class="display-card">
-                        <div class="card-header-div">
-                            <div class="drug-title">${item.nameAr}</div>
-                            <div class="price-badge"><span>${item.price}</span> ج.م</div>
+                    const cardHTML = `
+                        <div class="display-card">
+                            <div class="card-header-div">
+                                <div class="drug-title">${item.nameAr}</div>
+                                <div class="price-badge"><span>${item.price}</span> ج.م</div>
+                            </div>
+                            <div class="details-grid">
+                                <div class="info-row"><span class="lbl">المادة الفعالة:</span><span class="val">${item.activeAr}</span></div>
+                                <div class="info-row"><span class="lbl">الاسم بالإنجليزية:</span><span class="val" style="font-family:sans-serif;">${item.nameEn}</span></div>
+                                <div class="info-row"><span class="lbl">التركيز:</span><span class="val" style="color:var(--primary);">${item.strength}</span></div>
+                                <div class="info-row"><span class="lbl">الشكل الدوائي:</span><span class="badge-form">${item.form}</span></div>
+                            </div>
+                            <div class="alternatives-container">
+                                <div class="alt-header-title">🔄 البدائل والمثائل المطابقة:</div>
+                                <ul class="alt-bullet-list">${altsHTML}</ul>
+                            </div>
                         </div>
-                        <div class="details-grid">
-                            <div class="info-row"><span class="lbl">المادة الفعالة:</span><span class="val">${item.activeAr}</span></div>
-                            <div class="info-row"><span class="lbl">الاسم بالإنجليزية:</span><span class="val" style="font-family:sans-serif;">${item.nameEn}</span></div>
-                            <div class="info-row"><span class="lbl">التركيز:</span><span class="val" style="color:var(--primary);">${item.strength}</span></div>
-                            <div class="info-row"><span class="lbl">الشكل الدوائي:</span><span class="badge-form">${item.form}</span></div>
-                        </div>
-                        <div class="alternatives-container">
-                            <div class="alt-header-title">🔄 البدائل والمثائل المطابقة:</div>
-                            <ul class="alt-bullet-list">${altsHTML}</ul>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += cardHTML;
+                    `;
+                    container.innerHTML += cardHTML;
+                });
+            } else {
+                noResults.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

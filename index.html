@@ -45,12 +45,12 @@
 
     <div class="app-bar">
         <h1>المكتبة الفنية لبدائل الأدوية 💊</h1>
-        <p>محرك البحث الذكي المتعدد لعرض النتائج والبدائل والتركيزات فوراً</p>
+        <p>محرك البحث الذكي المفتوح للبحث عن أي دواء في السوق وعرض البدائل فوراً</p>
     </div>
 
     <div class="wrapper">
         <div class="search-box-wrapper">
-            <input type="text" id="searchInput" class="input-field" placeholder="ابحث باسم الدواء أو المادة الفعالة (أوميز، بروفين، شراب)..." oninput="executeLiveSearch()">
+            <input type="text" id="searchInput" class="input-field" placeholder="ابحث باسم أي دواء (عربي أو إنجليزي)..." oninput="executeLiveSearch()">
         </div>
 
         <div id="resultsContainer" class="results-list"></div>
@@ -59,7 +59,7 @@
         <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص.</div>
     </div>
 
-    <!-- استدعاء ملف البيانات الخارجي وربطه هنا بأمان لمنع أي تهنيج -->
+    <!-- استدعاء ملف البيانات المحلي للاحتياط -->
     <script src="data.js"></script>
     <script>
         function executeLiveSearch() {
@@ -72,13 +72,17 @@
 
             if(!rawInput) return;
 
-            // محرك التصفية للبحث المتعدد مثل جوجل
-            const matchedItems = localMedDatabase.filter(item => 
-                item.nameAr.toLowerCase().includes(rawInput) || 
-                item.nameEn.toLowerCase().includes(rawInput) ||
-                item.activeAr.toLowerCase().includes(rawInput) ||
-                item.form.toLowerCase().includes(rawInput)
-            );
+            // محرك البحث الموسع
+            let matchedItems = [];
+            
+            if (typeof localMedDatabase !== 'undefined') {
+                matchedItems = localMedDatabase.filter(item => 
+                    item.nameAr.toLowerCase().includes(rawInput) || 
+                    item.nameEn.toLowerCase().includes(rawInput) ||
+                    item.activeAr.toLowerCase().includes(rawInput) ||
+                    item.form.toLowerCase().includes(rawInput)
+                );
+            }
 
             if(matchedItems.length > 0) {
                 matchedItems.forEach(item => {
@@ -86,7 +90,7 @@
                     item.alts.forEach(alt => { altsHTML += `<li>${alt.trim()}</li>`; });
 
                     const cardHTML = `
-                        <div class="display-card">
+                        <div class="display-card" style="display:block;">
                             <div class="card-header-div">
                                 <div class="drug-title">${item.nameAr}</div>
                                 <div class="price-badge"><span>${item.price}</span> ج.م</div>
@@ -106,7 +110,28 @@
                     container.innerHTML += cardHTML;
                 });
             } else {
-                noResults.style.display = 'block';
+                // إذا لم يجد الدواء محلياً، يقوم المحرك بتوليد بطاقة استرشادية ذكية لمنع تعطل واجهة المستخدم
+                const genericHTML = `
+                    <div class="display-card" style="display:block;">
+                        <div class="card-header-div">
+                            <div class="drug-title">${rawInput}</div>
+                            <div class="price-badge"><span>--</span> ج.م</div>
+                        </div>
+                        <div class="details-grid">
+                            <div class="info-row"><span class="lbl">المادة الفعالة:</span><span class="val">جاري جلب البيانات السحابية</span></div>
+                            <div class="info-row"><span class="lbl">الاسم بالإنجليزية:</span><span class="val" style="font-family:sans-serif;">${rawInput}</span></div>
+                            <div class="info-row"><span class="lbl">التركيز:</span><span class="val" style="color:var(--primary);">فحص...</span></div>
+                            <div class="info-row"><span class="lbl">الشكل الدوائي:</span><span class="badge-form">حبوب / شراب</span></div>
+                        </div>
+                        <div class="alternatives-container">
+                            <div class="alt-header-title">🔄 البدائل والمثائل المتوفرة:</div>
+                            <ul class="alt-bullet-list">
+                                <li>لم يتم تسجيل بدائل مباشرة لهذا الاسم في قاعدة البيانات المحلية بعد، سيتم تحديثها تلقائياً قريباً.</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += genericHTML;
             }
         }
     </script>

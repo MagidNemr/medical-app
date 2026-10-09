@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المكتبة الفنية لبدائل الأدوية</title>
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root {
             --main-gradient: linear-gradient(135deg, #004d40, #00796b);
@@ -14,14 +15,16 @@
             --primary: #00897b;
             --primary-light: #e0f2f1;
         }
-        body { font-family: sans-serif; background-color: var(--bg-accent); margin: 0; padding: 0; color: var(--text-dark); }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-accent); margin: 0; padding: 0; color: var(--text-dark); }
         .app-bar { background: var(--main-gradient); color: white; padding: 40px 20px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 10px 25px rgba(0, 77, 64, 0.15); }
         .app-bar h1 { margin: 0; font-size: 24px; font-weight: 700; }
         .app-bar p { margin: 6px 0 0 0; opacity: 0.85; font-size: 13px; }
         .wrapper { max-width: 480px; margin: -25px auto 40px auto; padding: 0 16px; box-sizing: border-box; }
         .search-box-wrapper { background: var(--surface); padding: 6px 10px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); display: flex; align-items: center; border: 2px solid #e2e8f0; }
-        .input-field { flex: 1; border: none; padding: 12px 15px; font-size: 16px; outline: none; background: transparent; text-align: right; font-weight: bold; }
-        .display-card { background: var(--surface); border-radius: 20px; padding: 25px; margin-top: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0; display: none; text-align: right; }
+        .input-field { flex: 1; border: none; padding: 12px 15px; font-size: 16px; outline: none; background: transparent; text-align: right; font-weight: bold; font-family: 'Cairo'; }
+        
+        .results-list { margin-top: 25px; display: flex; flex-direction: column; gap: 20px; }
+        .display-card { background: var(--surface); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0; text-align: right; }
         .card-header-div { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 18px; }
         .drug-title { font-size: 20px; font-weight: 700; color: #004d40; }
         .price-badge { background: var(--primary-light); color: #004d40; font-weight: 700; padding: 6px 14px; border-radius: 50px; font-size: 14px; }
@@ -34,6 +37,7 @@
         .alt-header-title { font-weight: 700; color: #0f172a; margin-bottom: 12px; font-size: 14px; }
         .alt-bullet-list { margin: 0; padding-right: 20px; color: #334155; font-size: 14px; }
         .alt-bullet-list li { margin-bottom: 8px; color: #004d40; font-weight: 600; }
+        .no-results { background: var(--surface); border-radius: 20px; padding: 20px; text-align: center; color: var(--text-muted); font-weight: bold; border: 1px solid #e2e8f0; display: none; }
         .safety-disclaimer-div { font-size: 11px; color: #ef4444; text-align: center; margin-top: 35px; font-weight: 600; line-height: 1.6; }
     </style>
 </head>
@@ -41,38 +45,21 @@
 
 <div class="app-bar">
     <h1>المكتبة الفنية لبدائل الأدوية 💊</h1>
-    <p>البحث الفوري الشامل باللغتين والأشكال الدوائية والتركيزات</p>
+    <p>محرك البحث الذكي المتعدد لعرض النتائج والبدائل والتركيزات فوراً</p>
 </div>
 
 <div class="wrapper">
     <div class="search-box-wrapper">
-        <input type="text" id="searchInput" class="input-field" placeholder="اكتب اسم الدواء (أوميز، انتينال شراب، تيلفاست)..." oninput="executeLiveSearch()">
+        <input type="text" id="searchInput" class="input-field" placeholder="ابحث باسم الدواء أو المادة الفعالة (بروفين، شراب، أقراص)..." oninput="executeLiveSearch()">
     </div>
 
-    <div id="resultCard" class="display-card">
-        <div class="card-header-div">
-            <div class="drug-title" id="medName">---</div>
-            <div class="price-badge"><span id="medPrice">0</span> ج.م</div>
-        </div>
-        
-        <div class="details-grid">
-            <div class="info-row"><span class="lbl">المادة الفعالة:</span><span class="val" id="medActive">---</span></div>
-            <div class="info-row"><span class="lbl">الاسم بالإنجليزية:</span><span class="val" id="medNameEn" style="font-family:sans-serif;">---</span></div>
-            <div class="info-row"><span class="lbl">التركيز:</span><span class="val" id="medStrength" style="color:var(--primary);">---</span></div>
-            <div class="info-row"><span class="lbl">الشكل الدوائي:</span><span class="badge-form" id="medForm">---</span></div>
-        </div>
-
-        <div class="alternatives-container">
-            <div class="alt-header-title">🔄 البدائل والمثائل المطابقة والمتوفرة:</div>
-            <ul class="alt-bullet-list" id="medAlts"></ul>
-        </div>
-    </div>
+    <div id="resultsContainer" class="results-list"></div>
+    <div id="noResultsCard" class="no-results">عذراً، لم يتم العثور على أدوية مطابقة لبحثك.</div>
 
     <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص.</div>
 </div>
 
 <script>
-    // قاعدة البيانات الموسعة مدمجة كلياً لحل مشاكل الاتصال
     const localMedDatabase = [
         { nameAr: "كتالفام", nameEn: "cataflam", activeAr: "ديكلوفيناك البوتاسيوم", strength: "50 مجم", form: "حبوب / أقراص", price: "75", alts: ["أوفلام (Oflam)", "فاست فلام (Fastflam)", "أنتيفلام (Antiflam)"] },
         { nameAr: "بانادول أدفانس", nameEn: "panadol advance", activeAr: "باراسيتامول", strength: "500 مجم", form: "حبوب / أقراص", price: "40", alts: ["بارامول (Paramol)", "أدول (Adol)", "سيتال (Cetal)"] },
@@ -95,31 +82,43 @@
 
     function executeLiveSearch() {
         const rawInput = document.getElementById('searchInput').value.trim().toLowerCase();
-        const cardElement = document.getElementById('resultCard');
+        const container = document.getElementById('resultsContainer');
+        const noResults = document.getElementById('noResultsCard');
         
-        if(!rawInput) { cardElement.style.display = 'none'; return; }
+        container.innerHTML = "";
+        noResults.style.display = 'none';
 
-        const matchedItem = localMedDatabase.find(item => 
+        if(!rawInput) return;
+
+        const matchedItems = localMedDatabase.filter(item => 
             item.nameAr.toLowerCase().includes(rawInput) || 
-            item.nameEn.toLowerCase().includes(rawInput)
+            item.nameEn.toLowerCase().includes(rawInput) ||
+            item.activeAr.toLowerCase().includes(rawInput) ||
+            item.form.toLowerCase().includes(rawInput)
         );
 
-        if(matchedItem) {
-            document.getElementById('medName').innerText = matchedItem.nameAr;
-            document.getElementById('medNameEn').innerText = matchedItem.nameEn;
-            document.getElementById('medPrice').innerText = matchedItem.price;
-            document.getElementById('medActive').innerText = matchedItem.activeAr;
-            document.getElementById('medStrength').innerText = matchedItem.strength;
-            document.getElementById('medForm').innerText = matchedItem.form;
-            
-            let listItemsHTML = "";
-            matchedItem.alts.forEach(alt => { listItemsHTML += `<li>${alt.trim()}</li>`; });
-            document.getElementById('medAlts').innerHTML = listItemsHTML;
-            cardElement.style.display = 'block';
-        } else {
-            document.getElementById('medName').innerText = "دواء غير مسجل";
-            document.getElementById('medNameEn').innerText = "Not Found";
-            document.getElementById('medPrice').innerText = "--";
-            document.getElementById('medActive').innerText = "جاري مراجعته";
-            document.getElementById('medStrength').innerText = "--";
-            document.getElementById('medForm').innerText = "--";
+        if(matchedItems.length > 0) {
+            matchedItems.forEach(item => {
+                let altsHTML = "";
+                item.alts.forEach(alt => { altsHTML += `<li>${alt.trim()}</li>`; });
+
+                const cardHTML = `
+                    <div class="display-card">
+                        <div class="card-header-div">
+                            <div class="drug-title">${item.nameAr}</div>
+                            <div class="price-badge"><span>${item.price}</span> ج.م</div>
+                        </div>
+                        <div class="details-grid">
+                            <div class="info-row"><span class="lbl">المادة الفعالة:</span><span class="val">${item.activeAr}</span></div>
+                            <div class="info-row"><span class="lbl">الاسم بالإنجليزية:</span><span class="val" style="font-family:sans-serif;">${item.nameEn}</span></div>
+                            <div class="info-row"><span class="lbl">التركيز:</span><span class="val" style="color:var(--primary);">${item.strength}</span></div>
+                            <div class="info-row"><span class="lbl">الشكل الدوائي:</span><span class="badge-form">${item.form}</span></div>
+                        </div>
+                        <div class="alternatives-container">
+                            <div class="alt-header-title">🔄 البدائل والمثائل المطابقة:</div>
+                            <ul class="alt-bullet-list">${altsHTML}</ul>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });

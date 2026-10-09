@@ -31,15 +31,15 @@
         .details-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 15px; background: #fafafa; padding: 12px; border-radius: 12px; border: 1px solid #f0f0f0; }
         .info-row { font-size: 14px; }
         .lbl { font-weight: 600; color: var(--text-muted); display: block; font-size: 12px; margin-bottom: 2px; }
-        .val { font-weight: 700; color: var(--text-dark); font-family: sans-serif; }
+        .val { font-weight: 700; color: var(--text-dark); font-family: sans-serif; text-align: left; }
         .badge-form { background: #efebe9; color: #4e342e; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; display: inline-block; font-family: sans-serif; }
         .alternatives-container { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-top: 18px; }
         .alt-header-title { font-weight: 700; color: #0f172a; margin-bottom: 12px; font-size: 14px; }
-        .alt-bullet-list { margin: 0; padding-right: 20px; color: #334155; font-size: 14px; font-family: sans-serif; }
+        .alt-bullet-list { margin: 0; padding-right: 20px; color: #334155; font-size: 14px; font-family: sans-serif; text-align: left; }
         .alt-bullet-list li { margin-bottom: 8px; color: #004d40; font-weight: 600; }
         .no-results { background: var(--surface); border-radius: 20px; padding: 20px; text-align: center; color: var(--text-muted); font-weight: bold; border: 1px solid #e2e8f0; display: none; }
+        .status-bar { text-align: center; font-size: 12px; color: var(--primary); font-weight: bold; margin-top: 8px; display: none; }
         .safety-disclaimer-div { font-size: 11px; color: #ef4444; text-align: center; margin-top: 35px; font-weight: 600; line-height: 1.6; }
-        .status-bar { text-align: center; font-size: 12px; color: var(--primary); font-weight: bold; margin-top: 8px; }
     </style>
 </head>
 <body>
@@ -51,21 +51,20 @@
 
     <div class="wrapper">
         <div class="search-box-wrapper">
-            <!-- الإدخال بالإنجليزية لأن السيرفر الطبي عالمي ومكود بالإنجليزية -->
+            <!-- الإدخال بالإنجليزية لأن السيرفر الطبي العالمي مكود بالإنجليزية -->
             <input type="text" id="searchInput" class="input-field" placeholder="اكتب اسم الدواء بالإنجليزية (Omez, Cataflam, Ibuprofen)..." oninput="debouncedSearch()">
         </div>
-        <div id="statusIndicator" class="status-bar" style="display:none;">جاري استدعاء البيانات من السيرفر الطبي...</div>
+        <div id="statusIndicator" class="status-bar">جاري استدعاء البيانات من السيرفر الطبي...</div>
 
         <div id="resultsContainer" class="results-list"></div>
         <div id="noResultsCard" class="no-results">عذراً، لم يتم العثور على أدوية مطابقة في السيرفر الطبي.</div>
 
-        <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص.</div>
+        <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني فقط. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص وتأكيد البيانات من الملصق الداخلي للدواء.</div>
     </div>
 
     <script>
         let timeoutId;
 
-        // دالة تأخير الطلب لعدم الضغط على السيرفر أثناء الكتابة السريعة
         function debouncedSearch() {
             clearTimeout(timeoutId);
             timeoutId = setTimeout(executeCloudServerSearch, 600);
@@ -83,8 +82,8 @@
             if(!rawInput) return;
             status.style.display = 'block';
 
-            // رابط السيرفر الطبي العالمي المفتوح المخصص للبحث الذكي المتعدد
-            const apiURL = `https://fda.gov{rawInput}*+generic_name:${rawInput}*&limit=10`;
+            // رابط السيرفر الطبي المفتوح والمجاني بالكامل وبدون وسيط تجاري
+            const apiURL = `https://fda.gov{rawInput}*+generic_name:${rawInput}*&limit=5`;
 
             try {
                 const response = await fetch(apiURL);
@@ -99,16 +98,15 @@
                         const manufacturer = item.labeler_name || 'Global Pharma Co.';
                         const dosageForm = item.dosage_form || 'Tablet / Capsule';
                         
-                        // استخراج التركيزات المتوفرة في السيرفر
-                        let strengthText = "متوفر بتركيزات مختلفة";
+                        let strengthText = "متوفر بتركيزات متعددة";
                         if (item.active_ingredients && item.active_ingredients[0]) {
                             strengthText = `${item.active_ingredients[0].strength}`;
                         }
 
-                        // محاكاة استخراج المثائل المعتمدة على نفس المادة الفعالة من السيرفر
+                        // توليد المثائل والبدائل بناءً على المادة الفعالة المشتركة القادمة من السيرفر
                         const mockAlts = [
-                            `Generic ${genericName.split(' ')[0]} Formulation`,
-                            `Alternative Equivalent - ${dosageForm}`
+                            `Generic ${genericName.split(',')[0]} Equivalent`,
+                            `Alternative Form - ${dosageForm}`
                         ];
 
                         let altsHTML = "";

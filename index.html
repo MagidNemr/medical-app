@@ -4,141 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المكتبة الفنية لبدائل الأدوية</title>
+    <!-- ربط ملف التنسيق والشكل الاحترافي الخارجي -->
+    <link rel="stylesheet" href="style.css">
     <link href="https://googleapis.com" rel="stylesheet">
-    <style>
-        :root {
-            --main-gradient: linear-gradient(135deg, #004d40, #00796b);
-            --bg-accent: #f4f7f6;
-            --surface: #ffffff;
-            --text-dark: #0f172a;
-            --text-muted: #64748b;
-            --primary: #00897b;
-            --primary-light: #e0f2f1;
-        }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-accent); margin: 0; padding: 0; color: var(--text-dark); }
-        .app-bar { background: var(--main-gradient); color: white; padding: 40px 20px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 10px 25px rgba(0, 77, 64, 0.15); }
-        .app-bar h1 { margin: 0; font-size: 24px; font-weight: 700; }
-        .app-bar p { margin: 6px 0 0 0; opacity: 0.85; font-size: 13px; }
-        .wrapper { max-width: 480px; margin: -25px auto 40px auto; padding: 0 16px; box-sizing: border-box; }
-        .search-box-wrapper { background: var(--surface); padding: 6px 10px; border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); display: flex; align-items: center; border: 2px solid #e2e8f0; }
-        .input-field { flex: 1; border: none; padding: 12px 15px; font-size: 16px; outline: none; background: transparent; text-align: left; font-weight: bold; font-family: sans-serif; }
-        
-        .results-list { margin-top: 25px; display: flex; flex-direction: column; gap: 20px; }
-        .display-card { background: var(--surface); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0; text-align: right; }
-        .card-header-div { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 18px; }
-        .drug-title { font-size: 20px; font-weight: 700; color: #004d40; font-family: sans-serif; text-align: left; }
-        .price-badge { background: var(--primary-light); color: #004d40; font-weight: 700; padding: 6px 14px; border-radius: 50px; font-size: 12px; }
-        .details-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 15px; background: #fafafa; padding: 12px; border-radius: 12px; border: 1px solid #f0f0f0; }
-        .info-row { font-size: 14px; }
-        .lbl { font-weight: 600; color: var(--text-muted); display: block; font-size: 12px; margin-bottom: 2px; }
-        .val { font-weight: 700; color: var(--text-dark); font-family: sans-serif; text-align: left; }
-        .badge-form { background: #efebe9; color: #4e342e; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; display: inline-block; font-family: sans-serif; }
-        .alternatives-container { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-top: 18px; }
-        .alt-header-title { font-weight: 700; color: #0f172a; margin-bottom: 12px; font-size: 14px; }
-        .alt-bullet-list { margin: 0; padding-right: 20px; color: #334155; font-size: 14px; font-family: sans-serif; text-align: left; }
-        .alt-bullet-list li { margin-bottom: 8px; color: #004d40; font-weight: 600; }
-        .no-results { background: var(--surface); border-radius: 20px; padding: 20px; text-align: center; color: var(--text-muted); font-weight: bold; border: 1px solid #e2e8f0; display: none; }
-        .status-bar { text-align: center; font-size: 12px; color: var(--primary); font-weight: bold; margin-top: 8px; display: none; }
-        .safety-disclaimer-div { font-size: 11px; color: #ef4444; text-align: center; margin-top: 35px; font-weight: 600; line-height: 1.6; }
-    </style>
 </head>
 <body>
 
     <div class="app-bar">
         <h1>المكتبة الفنية لبدائل الأدوية 💊</h1>
-        <p>البث المباشر من السيرفر الطبي العالمي لجلب النتائج والبدائل الحية فوراً</p>
+        <p>البث المباشر المقسم هندسياً لجلب نتائج وبدائل أي دواء في العالم فوراً</p>
     </div>
 
     <div class="wrapper">
         <div class="search-box-wrapper">
+            <!-- الإدخال بالإنجليزية لأن السيرفر الطبي العالمي مكود بالإنجليزية -->
             <input type="text" id="searchInput" class="input-field" placeholder="اكتب اسم الدواء بالإنجليزية (Omez, Cataflam, Ibuprofen)..." oninput="debouncedSearch()">
         </div>
-        <div id="statusIndicator" class="status-bar">جاري استدعاء البيانات من السيرفر الطبي...</div>
+        <div id="statusIndicator" class="status-bar">جاري استدعاء البيانات من السيرفر الطبي السحابي...</div>
 
         <div id="resultsContainer" class="results-list"></div>
         <div id="noResultsCard" class="no-results">عذراً، لم يتم العثور على أدوية مطابقة في السيرفر الطبي.</div>
 
-        <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني عام فقط ولا يقدم استشارات مخصصة. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص دائماً، والتأكد من تطابق البيانات مع الملصق المطبوع على علبة الدواء الفعلية قبل تغيير أي جرعات.</div>
+        <div class="safety-disclaimer-div">⚠️ إخلاء مسؤولية طبي: هذا التطبيق مرجع استرشادي تقني عام فقط ولا يقدم استشارات طبية مخصصة. يرجى مراجعة واستشارة الطبيب أو الصيدلي المختص دائماً، وتأكيد البيانات مع الملصق المطبوع على علبة الدواء الفعلية قبل تغيير أي جرعات.</div>
     </div>
 
-    <script>
-        let timeoutId;
-
-        function debouncedSearch() {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(executeCloudServerSearch, 600);
-        }
-
-        async function executeCloudServerSearch() {
-            const rawInput = document.getElementById('searchInput').value.trim().toLowerCase();
-            const container = document.getElementById('resultsContainer');
-            const noResults = document.getElementById('noResultsCard');
-            const status = document.getElementById('statusIndicator');
-            
-            container.innerHTML = "";
-            noResults.style.display = 'none';
-
-            if(!rawInput) return;
-            status.style.display = 'block';
-
-            // تم إصلاح الرابط الرسمي الفعلي والصحيح لسيرفر openFDA للبحث الشامل
-            const apiURL = `https://fda.gov{rawInput}*+generic_name:${rawInput}*&limit=5`;
-
-            try {
-                const response = await fetch(apiURL);
-                if (!response.ok) throw new Error('Data not found');
-                const data = await response.json();
-                status.style.display = 'none';
-
-                if(data.results && data.results.length > 0) {
-                    data.results.forEach(item => {
-                        const brandName = item.brand_name || 'Unknown Brand';
-                        const genericName = item.generic_name || 'Unknown Active Ingredient';
-                        const manufacturer = item.labeler_name || 'Global Pharma Co.';
-                        const dosageForm = item.dosage_form || 'Tablet / Capsule';
-                        
-                        let strengthText = "متوفر بتركيزات متعددة";
-                        if (item.active_ingredients && item.active_ingredients[0]) {
-                            strengthText = `${item.active_ingredients[0].strength || 'مشترك'}`;
-                        }
-
-                        // محاكاة استخراج المثائل المعتمدة على المادة الفعالة
-                        const mockAlts = [
-                            `Generic ${genericName.split(',')[0]} Equivalent Formulation`,
-                            `Alternative Equivalent - ${dosageForm}`
-                        ];
-
-                        let altsHTML = "";
-                        mockAlts.forEach(alt => { altsHTML += `<li>${alt}</li>`; });
-
-                        const cardHTML = `
-                            <div class="display-card" style="display:block;">
-                                <div class="card-header-div">
-                                    <div class="drug-title">${brandName}</div>
-                                    <div class="price-badge"><span>معتمد دولياً</span></div>
-                                </div>
-                                <div class="details-grid">
-                                    <div class="info-row"><span class="lbl">المادة الفعالة (Generic Name):</span><span class="val">${genericName}</span></div>
-                                    <div class="info-row"><span class="lbl">الشركة المصنعة (Manufacturer):</span><span class="val">${manufacturer}</span></div>
-                                    <div class="info-row"><span class="lbl">التركيز (Strength):</span><span class="val" style="color:var(--primary);">${strengthText}</span></div>
-                                    <div class="info-row"><span class="lbl">الشكل الدوائي (Dosage Form):</span><span class="badge-form">${dosageForm}</span></div>
-                                </div>
-                                <div class="alternatives-container">
-                                    <div class="alt-header-title">🔄 البدائل والمثائل المطابقة بالمادة الفعالة:</div>
-                                    <ul class="alt-bullet-list">${altsHTML}</ul>
-                                </div>
-                            </div>
-                        `;
-                        container.innerHTML += cardHTML;
-                    });
-                } else {
-                    noResults.style.display = 'block';
-                }
-            } catch (error) {
-                status.style.display = 'none';
-                noResults.style.display = 'block';
-            }
-        }
-    </script>
+    <!-- ربط محرك البحث والـ JavaScript الخارجي المصلح -->
+    <script src="app.js"></script>
 </body>
 </html>
